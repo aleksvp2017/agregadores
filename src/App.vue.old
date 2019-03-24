@@ -1,0 +1,92 @@
+
+<template>
+  <div>
+    <abas :abas="abas">
+        <template v-slot:Agregadores>
+          <b-card
+            title=""
+            align=""
+            style=""
+            class="mb-2">
+          <filtros :filtros="['orgao','agregadores']"/>
+          <b-button variant="primary">Busca</b-button>
+          </b-card>        
+          <!--<minha-tabela :agregadores="agregadores" :itens="itens"/>-->
+        </template>
+        <template v-slot:Cadastro>          
+        </template>
+    </abas>            
+  </div>
+</template>
+
+<script>
+import Tabela from './components/shared/Tabela.vue'
+import Filtros from './components/shared/Filtros.vue'
+import Abas from './components/shared/Abas.vue'
+
+export default {
+  components: {
+      'minha-tabela' : Tabela,
+      'filtros' : Filtros,
+      'abas' : Abas
+  } ,
+  data () {
+    return {      
+      titulo: 'Agregadores',
+      itens: [],
+      agregadores: [],
+      abas: [
+        {titulo: 'Agregadores', selecionada: true, conteudo: '<filtros/>'},
+        {titulo: 'Cadastro', conteudo: 'po'}
+      ]
+    }
+  },
+  created(){
+    this.agregadores = carregarAgregadores();
+    this.itens = carregarItens();
+    let promise = this.$http.get('https://jsonplaceholder.typicode.com/albums/2');
+    let promiseJson = promise.then(res => res.json());
+    promiseJson.then(json => console.log(json));
+    this.$http.get('https://jsonplaceholder.typicode.com/albums/2').
+      then(response => response.json()).
+      then(json => console.log(json), err => alert(err));
+  }
+}
+
+function carregarAgregadores(){
+    return [{
+        codigo: '504',
+        descricao: 'Cadastro de sinistros - FUNDHAB'
+      },
+      {
+        codigo: '509',
+        descricao: 'Concessão de Empréstimos'
+      },
+      {
+        codigo: '519',
+        descricao: 'Reserva de contingência financeira'
+      },
+      {
+        codigo: '520',
+        descricao: 'Pessoal - Despesas Financeiras'
+      }];  
+}
+
+function carregarItens(){
+  return [{
+        programa: '2024',
+        uo: '25101',
+        acao: '153V',
+        po: '0004'
+      },
+      {
+        programa: '2038',
+        uo: '25101',
+        acao: '2OQN',
+        po: '0003'
+      }];
+}
+</script>
+
+<style>
+</style>
