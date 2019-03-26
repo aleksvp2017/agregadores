@@ -9,6 +9,8 @@
             style="background: #d9e6f2"
             border-variant="secondary"
             class="mb-2">
+            <b-form-input v-model="chaveBusca" type="text" 
+                placeholder="Digite código do agregador ou do órgão" />
             <b-form-select v-model="orgaoSelecionado" :options="orgaos" size="sm" class="mt-3" />
             <b-form-select v-model="agregadorSelecionado" :options="opcoesAgregadores" size="sm" class="mt-3" />
         </b-card>
@@ -44,6 +46,7 @@ import { obterTodasAssociacoes } from '../associacoes/DadosAssociacoes.js';
 export default {
     data(){
         return {
+            chaveBusca: '',
             orgaoSelecionado: null,
             orgaos: obterOpcoesOrgaos(),
             agregadorSelecionado: null,
@@ -56,6 +59,7 @@ export default {
             sortDesc: false,
             fields: [
                     { key: 'orgao', label:'Órgão', sortable: true },
+                    { key: 'descricaoorgao', label:'Descrição Órgão', sortable: true },
                     { key: 'uo', label:'Unidade Orçamentária', sortable: true },
                     { key: 'acao', label: 'Ação', sortable: true },
                     { key: 'po', label: 'Plano Orçamentário', sortable: true },
@@ -72,7 +76,12 @@ export default {
             if (this.agregadorSelecionado){
                 let exp = new RegExp(this.agregadorSelecionado.trim(), 'i');        
                 associacoesFiltradas = associacoesFiltradas.filter(associacao => exp.test(associacao.agregador));                                
-            }            
+            }   
+            if (this.chaveBusca){
+                let exp = new RegExp(this.chaveBusca.trim(), 'i'); 
+                associacoesFiltradas = associacoesFiltradas.filter(associacao => 
+                    exp.test(associacao.agregador) || exp.test(associacao.orgao));
+            }         
             return associacoesFiltradas;
         },
         rows(){

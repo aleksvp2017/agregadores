@@ -1,3 +1,9 @@
+//select '{codigo: ''' || codigoagregador || ''', descricao: ''' || descricao || ''', selecionado: false},'
+//from agregador
+
+
+
+
 export function obterTodosAgregadores(){
         return [
                 {codigo: '070', descricao: 'Metrô de Natal, João Pessoa e Maceió', selecionado: false},
@@ -645,4 +651,12 @@ export function obterTodosAgregadores(){
                 {codigo: '069', descricao: 'PAC - Promoção do Turismo Interno', selecionado: false}
         ];
 }
-        
+  
+
+export function obterOpcoesAgregadores(){
+        let opcoes = [];
+        opcoes.push({value: null, text: "Selecione um agregador"});
+        obterTodosAgregadores().forEach(agregador => opcoes.push({value: agregador.codigo, text: agregador.codigo + " - " + agregador.descricao}));
+        return opcoes;
+}
+  

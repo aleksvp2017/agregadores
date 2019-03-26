@@ -21,7 +21,20 @@ module.exports = {
         loader: 'vue-loader',
         options: {
           loaders: {
-          }
+          },
+          transformAssetUrls: {
+            video: ['src', 'poster'],
+            source: 'src',
+            img: 'src',
+            image: 'xlink:href',
+            'b-img': 'src',
+            'b-img-lazy': ['src', 'blank-src'],
+            'b-card': 'img-src',
+            'b-card-img': 'img-src',
+            'b-card-img-lazy': ['src', 'blank-src'],
+            'b-carousel-slide': 'img-src',
+            'b-embed': 'src'
+          }          
           // other vue-loader options go here
         }
       },
@@ -47,7 +60,7 @@ module.exports = {
   },
   devServer: {
     historyApiFallback: true,
-    port: 9001,
+    port: '8080',
     host: '172.27.2.10',
     noInfo: true,
     overlay: true

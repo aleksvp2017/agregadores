@@ -3,19 +3,26 @@
     <div>
         <h1 class="tituloAgregador">Agregadores</h1>
         <br/>
-        <b-form-input v-model="chaveBusca" type="text" placeholder="Digite código ou descrição do agregador" />
+        <b-card
+            title=""
+            align=""
+            style="background: #d9e6f2"
+            border-variant="secondary"
+            class="mb-2">        
+            <b-form-input v-model="chaveBusca" type="text" placeholder="Digite código ou descrição do agregador" />
+        </b-card>
     </div>
     <br/>
     
     <div>
         <b-button v-b-modal.telaCadastro @click="abrirTelaCadastro">Adicionar</b-button>
         <b-button @click="excluirSelecionados">Excluir</b-button>
-        <b-modal id="telaCadastro" title="Novo Agregador" v-model="mostrarTelaCadastro">
+        <b-modal id="telaCadastro" :title="tituloModal" v-model="mostrarTelaCadastro">
             <b-form-input v-model="text1" type="text" placeholder="Código" v-model:value="novoAgregador.codigo"/>
             <b-form-input v-model="text1" type="text" placeholder="Descrição" v-model:value="novoAgregador.descricao"/>            
             <div slot="modal-footer" class="w-100">     
                 <div class="float-right">
-                    <b-button size="sm" variant="primary" @click="adicionarAgregador">Salvar</b-button>
+                    <b-button size="sm" variant="primary" @click="salvarAgregador">Salvar</b-button>
                     <b-button size="sm" variant="primary" @click="mostrarTelaCadastro=false">Fechar</b-button>                    
                 </div>
             </div>            
@@ -36,6 +43,9 @@
                 <b-form-checkbox :value="true" :unchecked-value="false"
                     v-model="data.item.selecionado"/>
             </template>
+            <template slot="edicao" slot-scope="data">
+                <b-img @click="editarSelecionado(data.item)" :src="require('../../assets/icon_editar_20x20.png')" />
+            </template>
         </b-table>
         <b-pagination
             v-show="rows > perPage"
@@ -52,18 +62,26 @@
 import { obterTodosAgregadores } from './DadosAgregadores.js';
 
 export default {
-    created(){
-        serverBus.$on('carregarDadosAgregadores', dadosAgregadores => {
-            alert(dadosAgregadores);
-        });
-    },
     methods: {
         abrirTelaCadastro(){
+            this.tituloModal = 'Novo agregador';
             this.novoAgregador = {codigo:'', descricao:''};
             this.mostrarTelaCadastro = true;            
         },
-        adicionarAgregador(){
-            this.todosAgregadores.push(this.novoAgregador);            
+        salvarAgregador(){
+            let agregadorExistente = null;
+            this.todosAgregadores.forEach(agregador => {
+                if (agregador.codigo == this.novoAgregador.codigo){
+                    agregadorExistente = agregador;
+                }
+            });
+            if (!agregadorExistente){
+                this.todosAgregadores.push(this.novoAgregador);            
+            }
+            else{
+                agregadorExistente.descricao = this.novoAgregador.descricao;
+                agregadorExistente.codigo = this.novoAgregador.codigo;
+            }
             this.mostrarTelaCadastro = false;            
         },
         excluirSelecionados(){
@@ -82,6 +100,11 @@ export default {
             else{
                 this.todosAgregadores.forEach(agregador => agregador.selecionado = true);
             }
+        },
+        editarSelecionado(selecionado){
+            this.tituloModal = 'Editando agregador';
+            this.novoAgregador = {codigo:selecionado.codigo, descricao:selecionado.descricao};
+            this.mostrarTelaCadastro = true;      
         }
     },
     data(){
@@ -93,6 +116,7 @@ export default {
                 codigo: '',
                 descricao: ''
             },
+            tituloModal: 'Novo agregador',
             currentPage: 1,
             perPage: 10,
             sortBy: 'codigo',
@@ -100,7 +124,8 @@ export default {
             fields: [
                     { key: 'selecao', label:'' },
                     { key: 'codigo', label: 'Código', sortable: true },
-                    { key: 'descricao', label: 'Descrição', sortable: true }],
+                    { key: 'descricao', label: 'Descrição', sortable: true },
+                    { key: 'edicao', label:''}],
             chaveBusca: '',            
         }
     },

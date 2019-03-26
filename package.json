@@ -13,7 +13,8 @@
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.0.0-rc.15",
     "vue": "^2.6.10",
-    "vue-resource": "^1.0.3"
+    "vue-resource": "^1.0.3",
+    "vue-router": "^2.1.1"
   },
   "browserslist": [
     "> 1%",
