@@ -30,7 +30,7 @@
         <br/>
 
         <div>
-            <tabela :itens="associacoes" :campos="fields" ordenador="sortBy" campoSelecao="selecionado"
+            <tabela :itens="associacoes" :campos="fields" :ordenador="sortBy" campoSelecao="selecionado"
                 itensPorPagina="10" campoComoDropDown="agregador" :opcoesDoCampoComoDropDown="opcoesAgregadores"/>
 
             <!-- TABELA COM ASSOCIASSOES -->
@@ -83,6 +83,7 @@ export default {
             sortBy: 'orgao, acao, po',
             sortDesc: false,
             fields: [
+                    { key: 'selecao', label:'' },
                     { key: 'orgao', label:'Órgão', sortable: true },
                     { key: 'descricaoorgao', label:'Descrição Órgão', sortable: true },
                     { key: 'uo', label:'Unidade Orçamentária', sortable: true },
@@ -116,6 +117,12 @@ export default {
     },
     methods: {
         aplicarAgregador(){
+            this.associacoes.forEach(associacao => {
+                if (associacao.selecionado){
+
+                    associacao.agregador = this.agregadorAAplicarSelecionado;
+                }
+            });
         }
     }
 }
