@@ -32,36 +32,22 @@
     <br/>
 
     <div>
-        <b-table id="tabelaAgregadores" striped hover :items="agregadores" small
-            :per-page="perPage" :current-page="currentPage"
-            :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" :fields="fields">
-            <template slot="HEAD_selecao">
-                <b-form-checkbox v-on:change="selecionarTodosAgregadores" :value="true" :unchecked-value="false"
-                    v-model="todosSelecionado"/>
-            </template>
-            <template slot="selecao" slot-scope="data">
-                <b-form-checkbox :value="true" :unchecked-value="false"
-                    v-model="data.item.selecionado"/>
-            </template>
-            <template slot="edicao" slot-scope="data">
-                <b-img @click="editarSelecionado(data.item)" :src="require('../../assets/icon_editar_20x20.png')" />
-            </template>
-        </b-table>
-        <b-pagination
-            v-show="rows > perPage"
-            v-model="currentPage"
-            :total-rows="rows"
-            :per-page="perPage"
-            aria-controls="tabelaAgregadores"
-            />        
+        <!-- TABELA DE AGREGADORES -->
+        <tabela :itens="agregadores" :campos="camposTabela" ordenador="codigo" campoSelecao="selecionado"
+            @metodoAcao="editarSelecionado"  imagemBotaoAcao="./src/assets/icon_editar_20x20.png" 
+            itensPorPagina="10"/>
     </div>
   </div>
 </template>
 
 <script>
 import { obterTodosAgregadores } from './DadosAgregadores.js';
+import Tabela from '../shared/Tabela.vue';
 
 export default {
+    components: {
+        'tabela': Tabela
+    },
     methods: {
         abrirTelaCadastro(){
             this.tituloModal = 'Novo agregador';
@@ -93,14 +79,6 @@ export default {
             });
             this.todosAgregadores = agregadoresRestantes;
         },
-        selecionarTodosAgregadores(){
-            if (this.todosSelecionado){
-                this.todosAgregadores.forEach(agregador => agregador.selecionado = false);
-            }
-            else{
-                this.todosAgregadores.forEach(agregador => agregador.selecionado = true);
-            }
-        },
         editarSelecionado(selecionado){
             this.tituloModal = 'Editando agregador';
             this.novoAgregador = {codigo:selecionado.codigo, descricao:selecionado.descricao};
@@ -110,23 +88,18 @@ export default {
     data(){
         return {
             todosAgregadores: obterTodosAgregadores(),
-            todosSelecionado: false,
             mostrarTelaCadastro: false,
             novoAgregador:{
                 codigo: '',
                 descricao: ''
             },
             tituloModal: 'Novo agregador',
-            currentPage: 1,
-            perPage: 10,
-            sortBy: 'codigo',
-            sortDesc: false,
-            fields: [
+            camposTabela: [
                     { key: 'selecao', label:'' },
                     { key: 'codigo', label: 'Código', sortable: true },
                     { key: 'descricao', label: 'Descrição', sortable: true },
-                    { key: 'edicao', label:''}],
-            chaveBusca: '',            
+                    { key: 'colunaAcao', label:''}],
+            chaveBusca: ''
         }
     },
     computed: {

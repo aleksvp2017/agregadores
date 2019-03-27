@@ -3,7 +3,7 @@ import Home from './components/home/Home.vue';
 
 export const routes = [
 
-    { path: '', component: Home },
-    { path: '/agregadores', component: Agregadores }
+    { path: '', component: Home, descricao: 'Home' },
+    { path: '/agregadores', component: Agregadores, descricao: 'Agregadores' }
 
 ];
